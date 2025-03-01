@@ -1,0 +1,106 @@
+/* .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.card-item {
+    width: calc(33.33% - 20px);
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+} */
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.card-item {
+    /* width: calc(33.33% - 20px); */
+    width: 100%;
+    box-sizing: border-box;
+    padding: 3px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /*height: 130px; /* 카드 높이를 일정하게 설정 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.card-footer {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: flex-start;
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 5px; /* 내용이 위로 밀리지 않도록 함 */
+}
+
+.author,
+.date {
+    margin: 5px 0; /* 상하 간격 추가 */
+}
+
+.author {
+    font-weight: bold;
+}
+
+.date {
+    font-style: italic;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}

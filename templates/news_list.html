@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='card.css') }}" />
+        <title>News</title>
+        <script>
+            function saveClick(event, code, url) {
+                event.preventDefault();
+                fetch("/save_click", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ code: code })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.message) {
+                        window.location.href = url;
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+            <h1>News</h1>
+            <nav>
+                <a href="/">News</a>  <!-- 사이트맵 링크 -->
+
+                {% if current_user.is_authenticated %}
+                    <a href="/dashboard">대시보드</a>  <!-- 로그인 상태에서만 프로필 링크 -->
+                    <a href="/logout" class="login-btn">Logout</a>
+                {% else %}
+                    <a href="/login" class="login-btn">Login</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        <!-- 페이지 콘텐츠 영역 -->
+        <!-- <div>
+            <ul class="card-container">
+                {% for item in titles %}
+                    <li class="card-item">
+                        <a href="{{ item.url }}" class="card-link" onclick="saveClick(event, '{{ item.code }}', '{{ item.url }}')">
+                            <div class="card">
+                                <div class="card-title">
+                                    {{ item.title }}
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+         -->
+         <div>
+            <ul class="card-container">
+                {% for item in titles %}
+                    <li class="card-item">
+                        <a href="{{ item.url }}" class="card-link" onclick="saveClick(event, '{{ item.code }}', '{{ item.url }}')">
+                            <div class="card">
+                                <div class="card-title">
+                                    {{ item.title }}
+                                </div>
+                                <div class="card-footer">
+                                    <span class="author">작성자: 작성자</span>
+                                    <span class="date">2025-03-01 12:00</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </body>
+</html>
