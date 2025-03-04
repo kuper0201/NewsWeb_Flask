@@ -13,51 +13,6 @@
 <body>
     <div class="container">
         <div class="forms">
-            <!-- Login Form -->
-            <div class="form login">
-                <span class="title">Login</span>
-
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <ul class="flash-messages">
-                            {% for message in messages %}
-                                <li>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endwith %}
-
-                <form action="{{ url_for('login') }}" method="POST">
-                    <div class="input-field">
-                        <input type="text" name="username" placeholder="Enter your username" required />
-                        <i class="uil uil-user icon"></i>
-                    </div>
-                    <div class="input-field">
-                        <input type="password" name="password" class="password" placeholder="Enter your password" required />
-                        <i class="uil uil-lock icon"></i>
-                        <i class="uil uil-eye-slash showHidePw"></i>
-                    </div>
-
-                    <div class="checkbox-text">
-                        <div class="checkbox-content">
-                            <input type="checkbox" id="logCheck" />
-                            <label for="logCheck" class="text">Remember me</label>
-                        </div>
-                        <a href="#" class="text">Forgot password?</a>
-                    </div>
-
-                    <div class="input-field button">
-                        <input type="submit" value="Login" />
-                    </div>
-                </form>
-
-                <div class="login-signup">
-                    <span class="text">Not a member?
-                        <a href="#" class="text signup-link">Signup Now</a>
-                    </span>
-                </div>
-            </div>
-
             <!-- Registration Form -->
             <div class="form signup">
                 <span class="title">Registration</span>
@@ -84,6 +39,20 @@
                         </div>
                     </div>
 
+                    {% with messages = get_flashed_messages(with_categories=True) %}
+                        {% if messages %}
+                            <ul class="flash-messages">
+                                {% for message in messages %}
+                                    {% if message[0] == 'error' %}
+                                        <li class="flash-error">{{ message[1] }}</li>
+                                    {% else %}
+                                        <li class="flash-info">{{ message[1] }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+
                     <div class="input-field button">
                         <input type="submit" value="Signup" />
                     </div>
@@ -91,7 +60,7 @@
 
                 <div class="login-signup">
                     <span class="text">Already a member?
-                        <a href="#" class="text login-link">Login Now</a>
+                        <a href="{{ url_for('login') }}" class="text login-link">Login Now</a>
                     </span>
                 </div>
             </div>

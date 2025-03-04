@@ -1,4 +1,5 @@
 import csv
+from unicodedata import category
 from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -30,6 +31,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
+    # Post Method Logic
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -38,26 +40,33 @@ def login():
             login_user(user)
             return redirect(url_for('home'))
         else:
-            flash('Invalid username or password')
-    return render_template('login.html')
+            flash('Invalid username or password', category='error')
 
-@app.route('/register', methods=['POST'])
+    # Get Method Logic
+    return render_template('signin.html')
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    username = request.form['username']
-    password = request.form['password']
-    confirm_password = request.form['confirm_password']
+    # POST Method Logic
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
 
-    if password != confirm_password:
-        flash('Passwords do not match')
-    elif User.query.filter_by(username=username).first():
-        flash('Username already exists')
-    else:
-        hashed_password = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Account created! Please log in.')
-        return redirect(url_for('login'))
+        if password != confirm_password:
+            flash('Passwords do not match', category='error')
+        elif User.query.filter_by(username=username).first():
+            flash('Username already exists', category='error')
+        else:
+            hashed_password = generate_password_hash(password)
+            new_user = User(username=username, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Account created! Please log in.', category='info')
+            return redirect(url_for('login'))
+    
+    # GET Method Logic
+    return render_template('signup.html')
 
 @app.route('/dashboard')
 @login_required
