@@ -10,14 +10,15 @@ from app.models import News
 from datetime import datetime
 import sqlite3
 
+# 마이그레이션 할 원본 DB 파일 경로와 쿼리문 지정
 EXTERNAL_DB_PATH = '03_03/World.db'
+query = "SELECT id, category, url, title, press, author, date_time, image_url, original_text, summary, original_caption, generated_caption FROM World_articles"
 
 def fetch_external_data():
     """외부 데이터베이스에서 데이터를 가져와 내부 DB에 저장"""
     connection = sqlite3.connect(EXTERNAL_DB_PATH)
     cursor = connection.cursor()
 
-    query = "SELECT id, category, url, title, press, author, date_time, image_url, original_text, summary, original_caption, generated_caption FROM World_articles"
     cursor.execute(query)
     rows = cursor.fetchall()
 
