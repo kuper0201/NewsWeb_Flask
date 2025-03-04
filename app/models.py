@@ -5,8 +5,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)
-    history = db.Column(db.String(15), nullable=True)
-    impressions = db.Column(db.String(15), nullable=True)
+    history = db.Column(db.String, nullable=True)
+    impressions = db.Column(db.String, nullable=True)
 
     def add_history(self, code):
         if self.history:
@@ -16,6 +16,18 @@ class User(UserMixin, db.Model):
         else:
             history_list = [code]
         self.history = ",".join(history_list)
+        db.session.commit()
+
+    def add_impressions(self, impressions):
+        histories = self.history.split(",") if self.history else []
+
+        imp_list = []
+        for item in impressions:
+            if str(item) in histories:
+                imp_list.append(f'{item}_1')
+            else:
+                imp_list.append(f'{item}_0')
+        self.impressions = ",".join(imp_list)
         db.session.commit()
 
 class News(db.Model):

@@ -3,6 +3,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db, login_manager
 from app.models import User, News
+import json
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -11,15 +12,18 @@ def load_user(user_id):
 @app.route("/")
 def home():
     titles = read_from_db()
-    return render_template("news_list.html", titles=titles)
+    codes = [title.get("id") for title in titles]
+    return render_template("news_list.html", titles=titles, codes=codes)
 
 @app.route("/save_click", methods=["POST"])
 def save_click():
     data = request.json
     id = data.get("code")
+    impressions = json.loads(data.get("impressions"))
 
     if id and current_user.is_authenticated:
         current_user.add_history(id)
+        current_user.add_impressions(impressions)
         return jsonify({"message": "Click saved!", "history": current_user.history}), 200
 
     return jsonify({"message": "Invalid request"}), 400
@@ -65,7 +69,8 @@ def register():
 @login_required
 def dashboard():
     histories = current_user.history.split(",") if current_user.history else []
-    return render_template('dashboard.html', histories=histories)
+    impressions = current_user.impressions.split(",") if current_user.impressions else []
+    return render_template('dashboard.html', histories=histories, impressions=impressions)
 
 @app.route('/logout')
 @login_required
