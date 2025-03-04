@@ -17,3 +17,18 @@ class User(UserMixin, db.Model):
             history_list = [code]
         self.history = ",".join(history_list)
         db.session.commit()
+
+class News(db.Model):
+    __tablename__ = 'news'
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String)
+    url = db.Column(db.String)
+    title = db.Column(db.String)
+    press = db.Column(db.String)
+    author = db.Column(db.String)
+    date_time = db.Column(db.DateTime)
+    image_url = db.Column(db.String)
+    original_text = db.Column(db.String)
+    summary = db.Column(db.String)
+    original_caption = db.Column(db.String)
+    generated_caption = db.Column(db.String)

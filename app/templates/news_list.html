@@ -45,14 +45,14 @@
             <ul class="card-container">
                 {% for item in titles %}
                     <li class="card-item">
-                        <a href="{{ item.url }}" class="card-link" onclick="saveClick(event, '{{ item.code }}', '{{ item.url }}')">
+                        <a href="{{ item.url }}" class="card-link" onclick="saveClick(event, '{{ item.id }}', '{{ item.url }}')">
                             <div class="card">
                                 <div class="card-title">
                                     {{ item.title }}
                                 </div>
                                 <div class="card-footer">
-                                    <span class="author">작성자: 작성자</span>
-                                    <span class="date">2025-03-01 12:00</span>
+                                    <span class="author">{{ item.author }} / {{ item.press }}</span>
+                                    <span class="date">{{ item.date_time }}</span>
                                 </div>
                             </div>
                         </a>

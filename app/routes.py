@@ -1,10 +1,8 @@
-import csv
-from unicodedata import category
 from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db, login_manager
-from app.models import User
+from app.models import User, News
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -12,16 +10,16 @@ def load_user(user_id):
 
 @app.route("/")
 def home():
-    titles = read_tsv()
+    titles = read_from_db()
     return render_template("news_list.html", titles=titles)
 
 @app.route("/save_click", methods=["POST"])
 def save_click():
     data = request.json
-    code = data.get("code")
+    id = data.get("code")
 
-    if code and current_user.is_authenticated:
-        current_user.add_history(code)
+    if id and current_user.is_authenticated:
+        current_user.add_history(id)
         return jsonify({"message": "Click saved!", "history": current_user.history}), 200
 
     return jsonify({"message": "Invalid request"}), 400
@@ -31,7 +29,6 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
-    # Post Method Logic
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -42,12 +39,10 @@ def login():
         else:
             flash('Invalid username or password', category='error')
 
-    # Get Method Logic
     return render_template('signin.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # POST Method Logic
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -64,8 +59,6 @@ def register():
             db.session.commit()
             flash('Account created! Please log in.', category='info')
             return redirect(url_for('login'))
-    
-    # GET Method Logic
     return render_template('signup.html')
 
 @app.route('/dashboard')
@@ -80,8 +73,19 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-def read_tsv(file_path='datasets/news.tsv'):
-    with open(file_path, "r", encoding="utf-8") as file:
-        reader = csv.reader(file, delimiter="\t")
-        contents = [{"title": row[3], "code": row[0], "url": row[5]} for row in reader]
-        return contents[:12] if len(contents) >= 12 else contents
+def read_from_db():
+    news = News.query.order_by(News.date_time.desc()).limit(12).all()
+    return [{
+        'id': n.id,
+        'category': n.category,
+        'url': n.url,
+        'title': n.title,
+        'press': n.press,
+        'author': n.author,
+        'date_time': n.date_time,
+        'image_url': n.image_url,
+        'original_text': n.original_text,
+        'summary': n.summary,
+        'original_caption': n.original_caption,
+        'generated_caption': n.generated_caption
+    } for n in news]
