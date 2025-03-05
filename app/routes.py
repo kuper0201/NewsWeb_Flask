@@ -3,6 +3,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db, login_manager
 from app.models import User, News
+from datetime import datetime, time
 import json
 
 @login_manager.user_loader
@@ -79,7 +80,14 @@ def logout():
     return redirect(url_for('home'))
 
 def read_from_db():
+    # 오늘 아침 7시 이후 뉴스 가져오기
+    # today = datetime.now().date()
+    # morning_7am = datetime.combine(today, time(7, 0))
+    # news = News.query.filter(News.date_time >= morning_7am).order_by(News.date_time.desc()).all()
+
+    # 최신 뉴스 12개 가져오기
     news = News.query.order_by(News.date_time.desc()).limit(12).all()
+
     return [{
         'id': n.id,
         'category': n.category,
